@@ -1,4 +1,4 @@
-package pl.itcrowd.tutorials.bmt;
+package pl.itcrowd.tutorials.business;
 
 import javax.ejb.Stateless;
 
