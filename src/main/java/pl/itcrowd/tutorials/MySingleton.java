@@ -1,5 +1,6 @@
 package pl.itcrowd.tutorials;
 
+import pl.itcrowd.tutorials.DAO.BlogDAO;
 import pl.itcrowd.tutorials.business.CMT;
 import pl.itcrowd.tutorials.business.BMT;
 import pl.itcrowd.tutorials.domain.Post;
@@ -32,6 +33,9 @@ public class MySingleton {
     @EJB
     private BMT bmt;
 
+    @EJB
+    private BlogDAO blogDAO;
+
     @PostConstruct
     public void PostConstruct() {
         generateData();
@@ -39,12 +43,14 @@ public class MySingleton {
     }
 
     public void generateData() {
+
         User user = new User("user1");
 
         Post post = new Post("name1", "content1", user);
         Post post2 = new Post("name2", "content2", user);
 
-        entityManager.persist(post);
-        entityManager.persist(post2);
+        blogDAO.createPost(post);
+        blogDAO.createPost(post2);
     }
+
 }
