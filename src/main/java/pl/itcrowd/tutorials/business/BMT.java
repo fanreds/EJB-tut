@@ -1,6 +1,14 @@
 package pl.itcrowd.tutorials.business;
 
-import javax.ejb.Stateless;
+import pl.itcrowd.tutorials.DAO.BlogDAO;
+import pl.itcrowd.tutorials.domain.Post;
+
+import javax.annotation.Resource;
+import javax.ejb.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +18,38 @@ import javax.ejb.Stateless;
  * To change this template use File | Settings | File Templates.
  */
 @Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class BMT {
+    private static final Logger LOGGER = Logger.getLogger(BMT.class.getCanonicalName());
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @EJB
+    private BlogDAO blogDAO;
+
+    @Resource
+    private SessionContext sessionContext;
+
+    public void execute() {
+        UserTransaction ut = sessionContext.getUserTransaction();
+
+        try {
+            ut.begin();
+            Post post = blogDAO.getPostById(1);
+            LOGGER.info("" + post);
+            if (post != null) {
+                post.setContent("changed post");
+                blogDAO.updatePost(post);
+                LOGGER.info("commit");
+                ut.commit();
+            } else {
+                LOGGER.info("rollback");
+                ut.rollback();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
