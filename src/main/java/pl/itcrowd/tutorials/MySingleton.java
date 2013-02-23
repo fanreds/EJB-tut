@@ -7,11 +7,14 @@ import pl.itcrowd.tutorials.domain.Post;
 import pl.itcrowd.tutorials.domain.User;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.TransactionSynchronizationRegistry;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +26,7 @@ import javax.persistence.PersistenceContext;
 @Startup
 @Singleton
 public class MySingleton {
+    private static final Logger LOGGER = Logger.getLogger(MySingleton.class.getCanonicalName());
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -36,11 +40,16 @@ public class MySingleton {
     @EJB
     private BlogDAO blogDAO;
 
+    @Resource
+    private TransactionSynchronizationRegistry txReg;
+
     @PostConstruct
     public void PostConstruct() {
+        LOGGER.info("PostConstruct"+txReg.getTransactionKey());
         generateData();
-        bmt.execute();
-        bmt.updatePost();
+        cmt.execute();
+        cmt.getSizeOfPost();
+        LOGGER.info("PostConstruct"+txReg.getTransactionKey());
     }
 
     public void generateData() {
@@ -53,7 +62,7 @@ public class MySingleton {
 
         blogDAO.createPost(post);
         blogDAO.createPost(post2);
-        entityManager.persist(post3);
+        blogDAO.createPost(post3);
     }
 
 }
