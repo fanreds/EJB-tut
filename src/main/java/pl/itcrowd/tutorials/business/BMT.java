@@ -2,11 +2,13 @@ package pl.itcrowd.tutorials.business;
 
 import pl.itcrowd.tutorials.DAO.BlogDAO;
 import pl.itcrowd.tutorials.domain.Post;
+import pl.itcrowd.tutorials.domain.User;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import java.util.logging.Logger;
 
@@ -52,4 +54,6 @@ public class BMT {
             e.printStackTrace();
         }
     }
+
+
 }

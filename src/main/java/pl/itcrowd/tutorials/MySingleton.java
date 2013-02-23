@@ -1,6 +1,7 @@
 package pl.itcrowd.tutorials;
 
 import pl.itcrowd.tutorials.business.CMT;
+import pl.itcrowd.tutorials.business.BMT;
 import pl.itcrowd.tutorials.domain.Post;
 import pl.itcrowd.tutorials.domain.User;
 
@@ -28,10 +29,13 @@ public class MySingleton {
     @EJB
     private CMT cmt;
 
+    @EJB
+    private BMT bmt;
+
     @PostConstruct
     public void PostConstruct() {
         generateData();
-        cmt.execute();
+        bmt.execute();
     }
 
     public void generateData() {
@@ -42,6 +46,5 @@ public class MySingleton {
 
         entityManager.persist(post);
         entityManager.persist(post2);
-
     }
 }
